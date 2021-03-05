@@ -1,0 +1,7 @@
+version: "3.8"
+
+services:
+  web:
+    image: and1er/sloth-messenger:latest
+    ports:
+      - "127.0.0.1:5000:80"

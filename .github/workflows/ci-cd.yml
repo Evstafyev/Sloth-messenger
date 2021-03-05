@@ -28,9 +28,27 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: ${{ env.DEPLOY_APP_VERSION }}
 
-      - name: Docker Login
+      - name: Docker login
         uses: Azure/docker-login@v1
         with:
           login-server: https://registry.hub.docker.com/v2/
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+  deploy_docker_container:
+    name: Deploy Docker Container
+    needs: build_docker_image
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy docker container to host with docker
+        uses: wshihadeh/docker-deployment-action@v1
+        with:
+          remote_docker_host: ${{ secrets.DOCKER_SSH_USERNAME }}@${{ secrets.DOCKER_SSH_HOST }}
+          ssh_private_key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
+          ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
+          deployment_mode: docker-compose
+          copy_stack_file: true
+          args: up -d
