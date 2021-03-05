@@ -1,1 +1,2 @@
-# the_sloth_messenger
+# Sloth messenger
+Задание к интенсиву по Python от Skillbox.
