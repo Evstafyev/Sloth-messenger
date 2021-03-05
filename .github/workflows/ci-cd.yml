@@ -1,0 +1,35 @@
+name: CI-CD Pipeline
+
+on: [push]
+# on: 
+#   push:
+#     branches: 
+#       - main
+
+env:
+  DEPLOY_APP_VERSION: "${{ github.sha }}"
+
+jobs:
+  build_docker_image:
+    name: Build Docker Image
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and push an image
+        uses: docker/build-push-action@v1.1.0
+        with:
+          repository: sloth-messenger
+          dockerfile: ./Dockerfile
+          registry: ${{ secrets.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_LOGIN }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: ${{ env.DEPLOY_APP_VERSION }}
+
+    - name: Docker Login
+      uses: Azure/docker-login@v1
+      with:
+        login-server: https://${{ secrets.DOCKER_REGISTRY }}/v2/
+        username: ${{ secrets.DOCKER_LOGIN }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
