@@ -2,7 +2,7 @@ from flask import Flask
 from flask import jsonify
 import time
 
-app = Flask('The Sloth Messenger')
+app = Flask('Sloth Messenger')
 
 @app.route("/")
 def logo():
@@ -27,7 +27,7 @@ def logo():
 def status():
     status = {
         'status': True,
-        'name': 'The Sloth Messenger',
+        'name': 'Sloth Messenger',
         'time': time.time()
     }
     return jsonify(status)
