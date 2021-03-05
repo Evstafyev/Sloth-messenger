@@ -54,4 +54,4 @@ jobs:
           stack_file_name: docker-compose.yml
           pull_images_first: true
           keep_files: 3
-          args: -p test up -d
+          args: -p sloth up -d
