@@ -7,7 +7,8 @@ on: [push]
 #       - main
 
 env:
-  DEPLOY_APP_VERSION: "${{ github.sha }}"
+  DEPLOY_APP_VERSION: "latest"
+  # DEPLOY_APP_VERSION: "${{ github.sha }}"
 
 jobs:
   build_docker_image:
