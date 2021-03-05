@@ -30,6 +30,6 @@ jobs:
       - name: Docker Login
         uses: Azure/docker-login@v1
         with:
-          login-server: https://${{ secrets.DOCKER_REGISTRY }}/v2/
+          login-server: https://registry.hub.docker.com/v2/
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
