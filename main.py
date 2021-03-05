@@ -4,6 +4,7 @@ import time
 
 app = Flask('Sloth Messenger')
 
+
 @app.route("/")
 def logo():
     ascii_logo = """<b>⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿S⣿L⣿O⣿T⣿H⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿</b><br/>
@@ -23,6 +24,8 @@ def logo():
                     ⣿⣿⣿⣿⣿⣆⡀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠑⠐⠚⣨⣤⣾⣿⣿<br/>
                     <b>⣿⣿⣿⣿⣿⣿⣿M⣿E⣿S⣿S⣿A⣿N⣿G⣿E⣿R⣿⣿⣿⣿⣿⣿⣿</b><br/>"""
     return ascii_logo
+
+
 @app.route('/status')
 def status():
     status = {
@@ -31,5 +34,6 @@ def status():
         'time': time.time()
     }
     return jsonify(status)
+
 
 app.run()
