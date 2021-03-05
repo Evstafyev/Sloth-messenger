@@ -20,9 +20,9 @@ jobs:
       - name: Build and push an image
         uses: docker/build-push-action@v1.1.0
         with:
-          repository: sloth-messenger
+          repository: and1er/sloth-messenger
           dockerfile: ./Dockerfile
-          registry: ${{ secrets.DOCKER_REGISTRY }}
+          registry: registry.hub.docker.com
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: ${{ env.DEPLOY_APP_VERSION }}
