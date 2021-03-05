@@ -36,4 +36,5 @@ def status():
     return jsonify(status)
 
 
-app.run()
+if __name__ == "__main__":
+    app.run()
