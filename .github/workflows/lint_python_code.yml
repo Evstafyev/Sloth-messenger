@@ -1,0 +1,41 @@
+name: Lint Python Code
+
+on: [push]
+
+jobs:
+  lint_python_code:
+    name: Project Linter Stage
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Show current directory content
+      run: |
+        ls -la
+    - name: Install dev requirements
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements/dev.txt
+    - name: Run linter
+      run: |
+        flake8 .
+
+  super_linter:
+    # https://help.github.com/en/articles/workflow-syntax-for-github-actions
+    name: Super Linter Stage
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
+      - name: Run linter
+        uses: github/super-linter@v3
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

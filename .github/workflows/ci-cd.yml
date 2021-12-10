@@ -1,0 +1,57 @@
+name: CI-CD Pipeline
+
+on: [push]
+# on: 
+#   push:
+#     branches:
+#       - main
+
+env:
+  DEPLOY_APP_VERSION: "latest"
+  # DEPLOY_APP_VERSION: "${{ github.sha }}"
+
+jobs:
+  build_docker_image:
+    name: Build Docker Image
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and push an image
+        uses: docker/build-push-action@v1.1.0
+        with:
+          repository: and1er/sloth-messenger
+          dockerfile: ./Dockerfile
+          registry: registry.hub.docker.com
+          username: ${{ secrets.DOCKER_LOGIN }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: ${{ env.DEPLOY_APP_VERSION }}
+
+      - name: Docker login
+        uses: Azure/docker-login@v1
+        with:
+          login-server: https://registry.hub.docker.com/v2/
+          username: ${{ secrets.DOCKER_LOGIN }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+  deploy_docker_container:
+    name: Deploy Docker Container
+    needs: build_docker_image
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy docker container to host with docker
+        uses: wshihadeh/docker-deployment-action@master
+        with:
+          remote_docker_host: ${{ secrets.DOCKER_SSH_USERNAME }}@${{ secrets.DOCKER_SSH_HOST }}
+          ssh_private_key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
+          ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
+          copy_stack_file: true
+          deploy_path: /home/${{ secrets.DOCKER_SSH_USERNAME }}/deployment-test
+          stack_file_name: docker-compose.yml
+          pull_images_first: true
+          keep_files: 3
+          args: -p sloth up -d
